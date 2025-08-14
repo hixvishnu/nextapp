@@ -1,10 +1,9 @@
 "use client"
 import Link from "next/link"
-import React, { useEffect } from "react"
+import React from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { toast } from "react-hot-toast"
-import { log } from "console"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -13,7 +12,6 @@ export default function LoginPage() {
     password: "",
   })
 
-  const [buttonDisabled, setButtonDisabled] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
   const onLogin = async () => {
@@ -23,21 +21,15 @@ export default function LoginPage() {
       console.log("Login success", response.data)
       toast.success("Login success")
       router.push("/profile")
-    } catch (error: any) {
-      console.log("Login failed", error.message)
-      toast.error(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Login failed'
+      console.log("Login failed", errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
-      setButtonDisabled(false)
-    } else {
-      setButtonDisabled(true)
-    }
-  }, [user])
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <h1>{loading ? "Processing" : "Login"}</h1>

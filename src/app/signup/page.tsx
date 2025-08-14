@@ -4,7 +4,6 @@ import React, { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import toast from "react-hot-toast"
-import { log } from "node:console"
 
 export default function SignupPage() {
   const router = useRouter()
@@ -23,10 +22,10 @@ export default function SignupPage() {
       const response = await axios.post("/api/users/signup", user)
       console.log("Signup success", response.data)
       router.push("/login")
-    } catch (error: any) {
-      console.log("Signup failed", error.message)
-
-      toast.error(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Signup failed'
+      console.log("Signup failed", errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
